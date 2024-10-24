@@ -8,7 +8,7 @@ function App() {
 
   // Charger les produits depuis le backend
   useEffect(() => {
-    fetch('http://localhost:5000/api/produits')
+    fetch('https://backcourses.onrender.com/api/produits')
       .then((res) => res.json())
       .then((data) => setProduits(data));
   }, []);
@@ -28,7 +28,7 @@ function App() {
 
       console.log('Produit à ajouter:', produitAvecImage); // Log pour vérifier l'objet produit
 
-      fetch('http://localhost:5000/api/produits', {
+      fetch('https://backcourses.onrender.com/api/produits', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ function App() {
 
   // Supprimer un produit
   const supprimerProduit = (id) => {
-    fetch(`http://localhost:5000/api/produits/${id}`, {
+    fetch(`https://backcourses.onrender.com/api/produits/${id}`, {
       method: 'DELETE',
     })
       .then(() => {
@@ -59,7 +59,7 @@ function App() {
     if (produitModifie) {
       produitModifie.quantite = quantite;
 
-      fetch(`http://localhost:5000/api/produits/${id}`, {
+      fetch(`https://backcourses.onrender.com/api/produits/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
