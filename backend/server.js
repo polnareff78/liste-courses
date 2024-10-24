@@ -5,6 +5,7 @@ const cors = require('cors');
 // Initialisation de l'application Express
 const app = express();
 
+const mongURI = 'mongodb://atlas-sql-671a5ae7413b613e60f82b62-yhwe3.a.query.mongodb.net/sample_mflix?ssl=true&authSource=admin';
 // Middleware
 app.use(cors());
 app.use(express.json());
