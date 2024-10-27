@@ -28,7 +28,7 @@ function App() {
 
       console.log('Produit à ajouter:', produitAvecImage); // Log pour vérifier l'objet produit
 
-      fetch('https://backcourses.onrender.com/api/produits', {
+      fetch('https://backcourses.onrender.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ function App() {
 
   // Supprimer un produit
   const supprimerProduit = (id) => {
-    fetch(`https://backcourses.onrender.com/api/produits/${id}`, {
+    fetch(`https://backcourses.onrender.com`, {
       method: 'DELETE',
     })
       .then(() => {
@@ -59,7 +59,7 @@ function App() {
     if (produitModifie) {
       produitModifie.quantite = quantite;
 
-      fetch(`https://backcourses.onrender.com/api/produits/${id}`, {
+      fetch(`https://backcourses.onrender.com`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
