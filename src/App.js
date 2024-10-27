@@ -88,7 +88,12 @@ function App() {
         body: JSON.stringify(produitModifie),
       })
         .then(() => {
-          setProduits([...produits]);
+          // Mettez à jour l'état des produits en utilisant un nouveau tableau
+          setProduits((prevProduits) =>
+            prevProduits.map((produit) =>
+              produit._id === id ? { ...produit, quantite } : produit
+            )
+          );
         })
         .catch((error) => {
           console.error("Erreur lors de la modification de la quantité :", error);
@@ -102,7 +107,6 @@ function App() {
       prev.includes(id) ? prev.filter((checkedId) => checkedId !== id) : [...prev, id]
     );
   };
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <h1 className="text-3xl font-bold mb-6 text-blue-600">Liste de courses</h1>
