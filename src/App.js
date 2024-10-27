@@ -1,55 +1,76 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 function App() {
   const [produits, setProduits] = useState([]);
-  const [nouveauProduit, setNouveauProduit] = useState({ nom: '', quantite: 1 }); // Retirer imageUrl
+  const [nouveauProduit, setNouveauProduit] = useState({ nom: '', quantite: 1 });
   const [checkedProduits, setCheckedProduits] = useState([]);
 
   // Charger les produits depuis le backend
   useEffect(() => {
     fetch('https://backcourses.onrender.com/api/produits')
-      .then((res) => res.json())
-      .then((data) => setProduits(data));
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Erreur HTTP! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Données reçues du serveur :", data);
+        setProduits(data);
+      })
+      .catch((error) => {
+        console.error("Erreur lors du chargement des produits :", error);
+      });
   }, []);
 
   // Ajouter un produit
   const ajouterProduit = async () => {
     if (nouveauProduit.nom) {
       const produitExistant = produits.find((produit) => produit.nom.toLowerCase() === nouveauProduit.nom.toLowerCase());
-      
+
       if (produitExistant) {
         alert('Ce produit est déjà dans la liste !');
         return;
       }
 
-      // Pas d'image à ajouter
-      const produitAvecImage = { ...nouveauProduit }; // Pas besoin d'image
+      const produitSansImage = { ...nouveauProduit };
 
-      console.log('Produit à ajouter:', produitAvecImage); // Log pour vérifier l'objet produit
+      console.log('Produit à ajouter:', produitSansImage);
 
       fetch('https://backcourses.onrender.com/api/produits', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(produitAvecImage),
+        body: JSON.stringify(produitSansImage),
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`Erreur HTTP! status: ${res.status}`);
+          }
+          return res.json();
+        })
         .then((data) => {
+          console.log("Produit ajouté :", data);
           setProduits([...produits, data]);
-          setNouveauProduit({ nom: '', quantite: 1 }); // Réinitialiser sans image
+          setNouveauProduit({ nom: '', quantite: 1 });
+        })
+        .catch((error) => {
+          console.error("Erreur lors de l'ajout du produit :", error);
         });
     }
   };
 
   // Supprimer un produit
   const supprimerProduit = (id) => {
-    fetch(`https://backcourses.onrender.com/api/produits`, {
+    fetch(`https://backcourses.onrender.com/api/produits/${id}`, {
       method: 'DELETE',
     })
       .then(() => {
         setProduits(produits.filter((produit) => produit._id !== id));
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la suppression du produit :", error);
       });
   };
 
@@ -59,7 +80,7 @@ function App() {
     if (produitModifie) {
       produitModifie.quantite = quantite;
 
-      fetch(`https://backcourses.onrender.com/api/produits`, {
+      fetch(`https://backcourses.onrender.com/api/produits/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -68,6 +89,9 @@ function App() {
       })
         .then(() => {
           setProduits([...produits]);
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la modification de la quantité :", error);
         });
     }
   };
